@@ -7,5 +7,63 @@
 		<script src="./src/script.js"></script>
 		<title>Tic Tac Toe</title>
 	</head>
-	<body></body>
+	<body>
+		<header>
+			<h1 id="page-heading">Tic Tac Toe</h1>
+			<div id="players-info">
+				<div>
+					<h2 id="player-1" class="turn-active">Player 1</h2>
+					<p>Score: 3</p>
+				</div>
+				<div>
+					<h2 id="player-2" class="turn-inactive">Player 2</h2>
+					<p>Score: 2</p>
+				</div>
+			</div>
+			<div id="best-of-challenge">
+				<label for="set-rounds">Let's set challenge</label>
+				<input
+					type="range"
+					name="set-rounds"
+					id="set-rounds"
+					min="1"
+					max="5"
+					step="1"
+					value="1"
+				/>
+				<div class="display-rounds">Best of 5</div>
+			</div>
+		</header>
+		<div id="gameDisplay">
+			<div id="buttons">
+				<button data-row="1" data-cell="1">X</button>
+				<button data-row="1" data-cell="2">X</button>
+				<button data-row="1" data-cell="3">X</button>
+
+				<button data-row="2" data-cell="1">X</button>
+				<button data-row="2" data-cell="2">X</button>
+				<button data-row="2" data-cell="3">X</button>
+
+				<button data-row="3" data-cell="1">X</button>
+				<button data-row="3" data-cell="2">X</button>
+				<button data-row="3" data-cell="3">X</button>
+			</div>
+			<div id="scores">
+				<button id="new-game">New Game</button>
+				<h4 id="display-round">Round - 1</h4>
+				<p id="player-turn">Player 1, take turn</p>
+				<p id="round-result">Player - 1 have won the round</p>
+				<p id="display-streak">
+					Player - 1 is winning. Streak - 2 rounds
+				</p>
+				<div id="challenge-result">
+					<h4 id="challenge-result-heading">
+						Best of 5 Rounds Complete
+					</h4>
+					<p id="challenge-result-text">Player 1 have won by 3 - 2</p>
+				</div>
+			</div>
+		</div>
+		<footer><p>MAK</p></footer>
+	</body>
 </html>
