@@ -1,6 +1,7 @@
 // Factory function to make player objects
 function Player(name, marker) {
 	let winningStreak = 0;
+	let overallScore = 0;
 	const incrementWinningStreak = function () {
 		winningStreak++;
 	};
@@ -10,12 +11,20 @@ function Player(name, marker) {
 	const getWinningStreak = function () {
 		return winningStreak;
 	};
+	const incrementOverallScore = function () {
+		return overallScore++;
+	};
+	const getOverallScore = function () {
+		return overallScore;
+	};
 	return {
 		name,
 		marker,
 		incrementWinningStreak,
 		getWinningStreak,
 		resetWinningStreak,
+		incrementOverallScore,
+		getOverallScore,
 	};
 }
 
@@ -42,7 +51,7 @@ const gameBoard = (function () {
 	};
 
 	let moveNumber = 0;
-	let roundWinner = "";
+	let roundResult = "";
 	let lastTurnPlayer = player2.name;
 	const playTurn = function (boardRow, boardCell) {
 		// Checking who played last turn, game always starts from player1 for first time only.
@@ -52,53 +61,76 @@ const gameBoard = (function () {
 		let currentTurnPlayer =
 			lastTurnPlayer === player1.name ? player2 : player1;
 
+		// To display the game status or messages after each move
+		let isMoveAllowed = true;
+		let statusMessages = [];
+		let challengeResult = "";
+
 		incrementMoveNum();
 
 		// If First move of the round, log the round Number too
 		if (moveNumber === 1) {
 			// console.log(moveNumber);
-			console.log(`Round start: ${streakTracker.getCurrentRound()}`);
+			statusMessages.push(
+				`Round start: ${streakTracker.getCurrentRound()}`,
+			);
 		}
-		console.log(`Move Number: ${moveNumber} by ${currentTurnPlayer.name}`);
+
+		// statusMessages.push(`Move Number: ${moveNumber} by ${currentTurnPlayer.name}`);
 
 		// Making player move
 		const currentCellValue = boardArray[boardRow - 1][boardCell - 1];
 		// Checking if cell is already taken or not
 		if (currentCellValue === "X" || currentCellValue === "O") {
-			console.log(
+			isMoveAllowed = false;
+			statusMessages.push(
 				`Move not allowed, already placed ${currentCellValue} here.`,
 			);
-			return;
 		} else {
 			boardArray[boardRow - 1][boardCell - 1] = currentTurnPlayer.marker;
-		}
 
-		// Checking if we have a winner ye? If yes, increment round count and reset move number
-		roundWinner = checkWinner(currentTurnPlayer);
-		if (roundWinner !== "") {
-			streakTracker.updateRoundCount(); // It also checks and displays the bestOf challenge results
-			moveNumber = 0;
-		}
-		// If this is last move and we don't have a winner, call it a draw
-		if (moveNumber === 9 && roundWinner === "") {
-			console.log("We have a draw here!");
-			streakTracker.updateRoundCount();
-		}
+			// Checking if we have a winner yet?
+			roundResult = checkWinner(currentTurnPlayer);
+			if (roundResult) {
+				// If yes, increment round count, reset moveNumber,
+				// check if challenge ends reset the boardArray
+				statusMessages.push(resetBoard()); // This is round-over like game-over, calling it before incrementing the round
+				statusMessages.push(streakTracker.updateRoundCount());
+				if (streakTracker.checkChallengeEnd() === true) {
+					challengeResult = streakTracker.getChallengeResult(); // If challenge rounds also end, get the results.
+				}
+				moveNumber = 0;
+			} else if (roundResult === false && moveNumber === 9) {
+				// If we don't have a winner and this is last move,
+				// call it a draw, and reset the rounds count
+				statusMessages.push("We have a draw here!");
+				statusMessages.push(resetBoard());
+				streakTracker.resetRoundCount();
+			}
 
-		// Setting lastTurnPlayer variable for next turn
-		lastTurnPlayer = currentTurnPlayer.name;
+			// Setting lastTurnPlayer variable for next turn, and updating round
+			lastTurnPlayer = currentTurnPlayer.name;
+
+			let nextPlayer =
+				currentTurnPlayer.name === player1.name
+					? player2.name
+					: player1.name;
+			statusMessages.push(`${nextPlayer}, take your turn`);
+		}
+		return [
+			isMoveAllowed,
+			currentTurnPlayer.name,
+			currentTurnPlayer.marker,
+			roundResult,
+			moveNumber,
+			statusMessages,
+			challengeResult,
+		];
 	};
-	const incrementMoveNum = () => {
+	const incrementMoveNum = function () {
 		moveNumber++;
 	};
 
-	const resetBoard = function () {
-		for (const row of boardArray) {
-			for (let i = 0; i < row.length; i++) {
-				delete row[i];
-			}
-		}
-	};
 	const checkWinner = function (player) {
 		// Initializing 3 member arrays of 8 winning patterns from grid
 		const winningCombinations = [
@@ -111,28 +143,38 @@ const gameBoard = (function () {
 			[row1[0], row2[1], row3[2]],
 			[row1[2], row2[1], row3[0]],
 		];
-
 		for (const combination of winningCombinations) {
 			let markers = []; // One by one populating this array with markers at identified positions
 			for (let i = 0; i < combination.length; i++) {
 				markers.push(combination[i]);
 			}
-
+			// console.log(markers);
 			// Checking if all array markers are same or not
 			if (
 				markers[0] !== undefined &&
 				markers[0] === markers[1] &&
 				markers[1] === markers[2]
 			) {
-				console.log(markers);
-				console.log(
-					`We have a Winner! \n${player.name} with marker '${player.marker}' have won the round.`,
-				);
-				streakTracker.updateWinningPlayer(player);
-				return player.name;
+				// console.log(markers);
+
+				// Update the player score in instance of Player's object
+				// and update the player streak, if qualifies
+				player.incrementOverallScore();
+				let winnerMessage = `We have a Winner! \n${player.name} with marker '${player.marker}' have won the round.`;
+				let streakStatus = streakTracker.updateWinningPlayer(player);
+				return [winnerMessage, streakStatus];
 			}
 		}
-		return "";
+		return false;
+	};
+
+	const resetBoard = function () {
+		for (const row of boardArray) {
+			for (let i = 0; i < row.length; i++) {
+				delete row[i];
+			}
+		}
+		return `Round ${streakTracker.getCurrentRound()} Over`;
 	};
 
 	return {
@@ -150,8 +192,6 @@ const streakTracker = (function () {
 	let bestOf = 1;
 	let roundsCount = 1;
 	let lastRoundWinner = "";
-	let currentRoundWinner = "";
-	let winningPlayerStreak = 0;
 
 	const setBestOf = function (rounds = 1) {
 		// It sets the rounds for bestOf challenge, and also resets the
@@ -162,53 +202,55 @@ const streakTracker = (function () {
 		gameBoard.getPlayer1().resetWinningStreak();
 		gameBoard.getPlayer2().resetWinningStreak();
 
-		return bestOf;
+		return `Best of ${rounds}`;
+	};
+
+	const updateRoundCount = function () {
+		// only increment the rounds count if still rounds remaining in ste challenge
+		if (checkChallengeEnd() === false) {
+			roundsCount++;
+		}
+	};
+
+	const resetRoundCount = function () {
+		roundsCount = 1;
+	};
+
+	const checkChallengeEnd = function () {
+		return bestOf === roundsCount ? true : false;
+	};
+
+	const getChallengeResult = function () {
+		// If bestOf challenge is on, and its the end of last round, announce
+		// result and reset both variables, bestOf and roundCount
+
+		const player1 = gameBoard.getPlayer1();
+		const player2 = gameBoard.getPlayer2();
+
+		const p1Streak = gameBoard.getPlayer1().getWinningStreak();
+		const p2Streak = gameBoard.getPlayer2().getWinningStreak();
+
+		if (p1Streak === p2Streak) {
+			result = `Tournament Complete \nIt's a draw \nBoth ${player1.name} & ${player2.name} have won ${p1Streak} ${p1Streak == 1 ? "round" : rounds} each.`;
+		} else if (p1Streak > p2Streak) {
+			result = `Tournament Complete \n${player1.name} have won tournament by ${p1Streak} - ${p2Streak}`;
+		} else {
+			result = `Tournament Complete \n${player2.name} have won tournament by ${p2Streak} - ${p1Streak}`;
+		}
+		bestOf = 1; // Not calling the method setBestOf() here, because it will also rest the streak of players if they want to play without setting bestOf challenge
+		roundsCount = 1;
+
+		return result;
 	};
 
 	const getCurrentRound = function () {
 		return roundsCount;
 	};
-	const updateRoundCount = function () {
-		// Only update round count if we have a bestOf challenge on
-		if (bestOf > 1 && roundsCount < bestOf) {
-			checkBestOfChallengeResult();
-			roundsCount++;
-		}
-	};
-
-	const checkBestOfChallengeResult = function () {
-		// If bestOf challenge is on, and its the end of last round, announce
-		// result and reset both variables, bestOf and roundCount
-
-		// We have to check this condition by decrementing the roundsCount variable because if game detects a winner it
-		if (bestOf === roundsCount) {
-			const p1Streak = gameBoard.getPlayer1().getWinningStreak();
-			const p2Streak = gameBoard.getPlayer2().getWinningStreak();
-			if (p1Streak === p2Streak) {
-				console.log(
-					`Tournament Complete \nIt's a draw \nBoth ${player1.name} & ${player2.name} have won ${p1Streak} ${p1Streak == 1 ? "round" : rounds} each.`,
-				);
-			} else if (p1Streak > p2Streak) {
-				console.log(
-					`Tournament Complete \n${player1.name} have won tournament by ${p1Streak} - ${p2Streak}`,
-				);
-			} else {
-				console.log(
-					`Tournament Complete \n${player2.name} have won tournament by ${p2Streak} - ${p1Streak}`,
-				);
-			}
-			bestOf = 1; // Not calling the method setBestOf() here, because it will also rest the streak of players if they want to play without setting bestOf challenge
-			roundsCount = 1;
-		}
-	};
 
 	const updateWinningPlayer = function (player) {
 		// Checking if streak should continue or should be reset
-		if (lastRoundWinner !== "") {
-			console.log(`Last Round Winner: ${lastRoundWinner}`);
-			if (lastRoundWinner !== player.name) {
-				player.resetWinningStreak(); // Resetting the player of last round winner streak to 0.
-			}
+		if (lastRoundWinner !== player.name) {
+			player.resetWinningStreak(); // Resetting the player of last round winner streak to 0.
 		}
 
 		// In any case winner streak should increment because this method
@@ -218,53 +260,100 @@ const streakTracker = (function () {
 		// Setting new lastRoundWinner for next time
 		lastRoundWinner = player.name;
 
-		console.log(
-			`Winning Player: ${player.name}, Winning Streak: ${player.getWinningStreak()}`,
-		);
-		return [lastRoundWinner, winningPlayerStreak];
+		return `Winning Player: ${player.name}, Winning Streak: ${player.getWinningStreak()}`;
 	};
 
 	return {
 		setBestOf,
 		getCurrentRound,
 		updateRoundCount,
+		resetRoundCount,
 		updateWinningPlayer,
+		checkChallengeEnd,
+		getChallengeResult,
 	};
 })();
 
-streakTracker.setBestOf(3);
+const displayGame = (function () {
+	const gameButtons = document.getElementsByClassName("game-btn");
 
-gameBoard.getBoardArray();
-const player1 = gameBoard.getPlayer1();
-const player2 = gameBoard.getPlayer2();
+	for (const btn of gameButtons) {
+		btn.addEventListener("click", (e) => {
+			const [rowNum, cellNum] = [
+				e.target.dataset.row,
+				e.target.dataset.cell,
+			];
 
-// Round-1
-gameBoard.playTurn(1, 2);
-gameBoard.playTurn(2, 2);
-gameBoard.playTurn(3, 3);
-gameBoard.playTurn(3, 1);
-gameBoard.playTurn(1, 3);
-gameBoard.playTurn(1, 1);
-gameBoard.playTurn(2, 3);
+			// References of 'scores' sections divs
+			const dispStatusMessages =
+				document.getElementById("status-messages");
+			const displayRound = document.getElementById("display-round");
+			const dispRoundResult = document.getElementById("round-result");
+			const dispStreakStatus = document.getElementById("display-streak");
+			const dispChallengeRes =
+				document.getElementById("challenge-result");
 
-// Round-2
-gameBoard.resetBoard();
-gameBoard.playTurn(1, 2);
-gameBoard.playTurn(3, 1);
-gameBoard.playTurn(2, 2);
-gameBoard.playTurn(3, 2);
-gameBoard.playTurn(3, 3);
-gameBoard.playTurn(2, 1);
-gameBoard.playTurn(1, 3);
-gameBoard.playTurn(1, 1);
+			const [
+				isMoveAllowed,
+				currentTurnPlayerName,
+				currentTurnPlayerMarker,
+				roundResult,
+				moveNumber,
+				statusMessages,
+				challengeResult,
+			] = gameBoard.playTurn(rowNum, cellNum);
 
-// Round-3
-gameBoard.resetBoard();
-gameBoard.playTurn(1, 2);
-gameBoard.playTurn(3, 1);
-gameBoard.playTurn(2, 2);
-gameBoard.playTurn(3, 2);
-gameBoard.playTurn(3, 3);
-gameBoard.playTurn(2, 1);
-gameBoard.playTurn(1, 3);
-gameBoard.playTurn(1, 1);
+			if (isMoveAllowed) {
+				e.target.textContent = currentTurnPlayerMarker;
+			}
+
+			displayRound.textContent =
+				"Round - " + streakTracker.getCurrentRound();
+			dispStatusMessages.innerHTML = statusMessages.join(`<br/>`);
+			dispChallengeRes.textContent = challengeResult;
+
+			if (roundResult) {
+				const [winnerMessage, streakStatus] = roundResult;
+				dispRoundResult.textContent = winnerMessage;
+				dispStreakStatus.textContent = streakStatus;
+			}
+		});
+	}
+})();
+
+// streakTracker.setBestOf(3);
+
+// gameBoard.getBoardArray();
+// const player1 = gameBoard.getPlayer1();
+// const player2 = gameBoard.getPlayer2();
+
+// // Round-1
+// gameBoard.playTurn(3, 1);
+// gameBoard.playTurn(2, 1);
+// gameBoard.playTurn(3, 2);
+// gameBoard.playTurn(2, 2);
+// gameBoard.playTurn(3, 3);
+// gameBoard.playTurn(1, 1);
+// gameBoard.playTurn(2, 3);
+
+// // Round-2
+// gameBoard.resetBoard();
+// gameBoard.playTurn(1, 2);
+// gameBoard.playTurn(3, 1);
+// gameBoard.playTurn(2, 2);
+// gameBoard.playTurn(3, 2);
+// gameBoard.playTurn(3, 3);
+// gameBoard.playTurn(2, 1);
+// gameBoard.playTurn(1, 3);
+// gameBoard.playTurn(1, 1);
+
+// // Round-3
+// gameBoard.resetBoard();
+// gameBoard.playTurn(1, 2);
+// gameBoard.playTurn(3, 1);
+// gameBoard.playTurn(2, 2);
+// gameBoard.playTurn(3, 2);
+// gameBoard.playTurn(3, 3);
+// gameBoard.playTurn(2, 1);
+// gameBoard.playTurn(1, 3);
+// gameBoard.playTurn(1, 1);

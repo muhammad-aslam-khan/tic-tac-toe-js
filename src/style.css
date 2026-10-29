@@ -44,7 +44,7 @@ header {
 	width: 600px;
 
 	display: grid;
-	grid: min-content/ 300px max-content;
+	grid: min-content/ 300px 1fr;
 	gap: 40px;
 
 	margin: 0 auto;
@@ -69,6 +69,7 @@ header {
 }
 
 #scores {
+	/* width: 100%; */
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -77,8 +78,11 @@ header {
 	padding: 15px;
 }
 #scores * {
+	width: 100%;
 	text-align: center;
 	margin: 5px auto;
+
+	border: 1px solid black;
 }
 
 footer {

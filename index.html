@@ -4,7 +4,7 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="stylesheet" href="./src/style.css" />
-		<script src="./src/script.js"></script>
+		<script src="./src/script.js" defer></script>
 		<title>Tic Tac Toe</title>
 	</head>
 	<body>
@@ -13,11 +13,11 @@
 			<div id="players-info">
 				<div>
 					<h2 id="player-1" class="turn-active">Player 1</h2>
-					<p>Score: 3</p>
+					<p id="p1-overall-score">Score: 3</p>
 				</div>
 				<div>
 					<h2 id="player-2" class="turn-inactive">Player 2</h2>
-					<p>Score: 2</p>
+					<p id="p2-overall-score">Score: 2</p>
 				</div>
 			</div>
 			<div id="best-of-challenge">
@@ -36,21 +36,22 @@
 		</header>
 		<div id="gameDisplay">
 			<div id="buttons">
-				<button data-row="1" data-cell="1">X</button>
-				<button data-row="1" data-cell="2">X</button>
-				<button data-row="1" data-cell="3">X</button>
+				<button class="game-btn" data-row="1" data-cell="1"></button>
+				<button class="game-btn" data-row="1" data-cell="2"></button>
+				<button class="game-btn" data-row="1" data-cell="3"></button>
 
-				<button data-row="2" data-cell="1">X</button>
-				<button data-row="2" data-cell="2">X</button>
-				<button data-row="2" data-cell="3">X</button>
+				<button class="game-btn" data-row="2" data-cell="1"></button>
+				<button class="game-btn" data-row="2" data-cell="2"></button>
+				<button class="game-btn" data-row="2" data-cell="3"></button>
 
-				<button data-row="3" data-cell="1">X</button>
-				<button data-row="3" data-cell="2">X</button>
-				<button data-row="3" data-cell="3">X</button>
+				<button class="game-btn" data-row="3" data-cell="1"></button>
+				<button class="game-btn" data-row="3" data-cell="2"></button>
+				<button class="game-btn" data-row="3" data-cell="3"></button>
 			</div>
 			<div id="scores">
 				<button id="new-game">New Game</button>
 				<h4 id="display-round">Round - 1</h4>
+				<p id="status-messages">Move not allowed</p>
 				<p id="player-turn">Player 1, take turn</p>
 				<p id="round-result">Player - 1 have won the round</p>
 				<p id="display-streak">
