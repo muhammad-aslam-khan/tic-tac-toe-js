@@ -5,6 +5,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="stylesheet" href="./src/style.css" />
 		<script src="./src/script.js" defer></script>
+		<link rel="shortcut icon" href="favicon.svg" type="image/svg+xml" />
 		<title>Tic Tac Toe</title>
 	</head>
 	<body>
@@ -13,11 +14,11 @@
 			<div id="players-info">
 				<div>
 					<h2 id="player-1" class="turn-active">Player 1</h2>
-					<p id="p1-overall-score">Score: 3</p>
+					<p id="p1-overall-score">0</p>
 				</div>
 				<div>
 					<h2 id="player-2" class="turn-inactive">Player 2</h2>
-					<p id="p2-overall-score">Score: 2</p>
+					<p id="p2-overall-score">0</p>
 				</div>
 			</div>
 			<div id="best-of-challenge">
@@ -31,7 +32,7 @@
 					step="1"
 					value="1"
 				/>
-				<div class="display-rounds">Best of 5</div>
+				<div id="display-rounds"></div>
 			</div>
 		</header>
 		<div id="gameDisplay">
@@ -50,21 +51,73 @@
 			</div>
 			<div id="scores">
 				<button id="new-game">New Game</button>
-				<h4 id="display-round">Round - 1</h4>
-				<p id="status-messages">Move not allowed</p>
-				<p id="player-turn">Player 1, take turn</p>
-				<p id="round-result">Player - 1 have won the round</p>
-				<p id="display-streak">
-					Player - 1 is winning. Streak - 2 rounds
-				</p>
+
+				<h4 id="round-info"></h4>
+
 				<div id="challenge-result">
-					<h4 id="challenge-result-heading">
-						Best of 5 Rounds Complete
-					</h4>
-					<p id="challenge-result-text">Player 1 have won by 3 - 2</p>
+					<h4 id="chlng-res-heading"></h4>
+					<p id="chlng-res-text"></p>
 				</div>
+
+				<div id="round-result">
+					<h3 id="round-res-anounc"></h3>
+					<h4 id="round-res-winner"></h4>
+					<p id="round-res-strPlyr"></p>
+					<p id="round-res-strRes"></p>
+				</div>
+
+				<p id="next-player"></p>
 			</div>
 		</div>
 		<footer><p>MAK</p></footer>
+		<!-- <script>
+			gameButtons = document.getElementsByClassName("game-btn");
+			const newGameBtn = document.getElementById("new-game");
+			newGameBtn.textContent = "New game";
+			// newGameBtn.disabled = true; // On page load new game btn is disabled
+			// Player overall scores
+			const p1ScoreDisplay = document.getElementById("p1-overall-score");
+			const p2ScoreDisplay = document.getElementById("p2-overall-score");
+			// Rounds Challenge
+			const roundsSetter = document.getElementById("set-rounds");
+			const dispSetRounds = document.getElementById("display-rounds");
+			// References of 'scores' sections divs
+			const dispRndInfo = document.getElementById("round-info");
+			const dispChlResHead = document.getElementById("chlng-res-heading");
+			const dispChlResText = document.getElementById("chlng-res-text");
+			const dispRndResAn = document.getElementById("round-res-anounc");
+			const dispRndResWin = document.getElementById("round-res-winner");
+			const dispRndResStrP = document.getElementById("round-res-strPlyr");
+			const dispRndResStrR = document.getElementById("round-res-strRes");
+			const dispNextPlayer = document.getElementById("next-player");
+
+			const statusMessages = {
+				challengeResult: {
+					heading: "Player 1 have won the Challenge",
+					text: "Score: 2 - 0",
+				},
+				roundResult: {
+					announc: "We have a Winner!",
+					winner: "Player 1 with marker 'X' have won the round.",
+					streakPlayer: "Winning Player: Player 1",
+					streakResult: "Streak: 2 Rounds",
+				},
+				roundInfo: "Round: 2",
+				roundOverInfo: "Round 2 Over",
+				nextPlayer: "Player 2, take your turn",
+			};
+
+			dispRndInfo.textContent = statusMessages.roundInfo;
+			dispRndInfo.textContent = statusMessages.roundOverInfo;
+			dispChlResHead.textContent = statusMessages.challengeResult.heading;
+			dispChlResText.textContent = statusMessages.challengeResult.text;
+			dispRndResAn.textContent = statusMessages.roundResult.announc;
+			dispRndResWin.textContent = statusMessages.roundResult.winner;
+			dispRndResStrP.textContent =
+				statusMessages.roundResult.streakPlayer;
+			dispRndResStrR.textContent =
+				statusMessages.roundResult.streakResult;
+			dispNextPlayer.textContent = statusMessages.nextPlayer;
+		</script> -->
 	</body>
 </html>
