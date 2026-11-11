@@ -4,7 +4,17 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="stylesheet" href="./src/style.css" />
+		<link rel="stylesheet" href="./src/fonts.css" />
 		<script src="./src/script.js" defer></script>
+
+		<!-- Google Fonts -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Carter+One&family=Contrail+One&family=Edu+NSW+ACT+Foundation:wght@400..700&family=Luckiest+Guy&family=Short+Stack&display=swap"
+			rel="stylesheet"
+		/>
+
 		<link
 			rel="shortcut icon"
 			href="./src/tic-tac-toe-game.svg"
@@ -14,66 +24,106 @@
 	</head>
 	<body>
 		<header>
-			<h1 id="page-heading">Tic Tac Toe</h1>
+			<h1 id="page-heading" class="luckiest-guy-regular">Tic Tac Toe</h1>
 			<div id="players-info">
 				<div>
-					<h2 id="player-1" class="turn-active">Player 1</h2>
-					<p id="p1-overall-score">0</p>
+					<h2 id="player-1" class="turn-active carter-one-regular">
+						Player 1
+					</h2>
+					<p id="p1-overall-score" class="contrail-one-regular">0</p>
+				</div>
+				<div id="best-of-challenge" class="short-stack-regular">
+					<label for="set-rounds">Let's set challenge</label>
+					<input
+						type="range"
+						name="set-rounds"
+						id="set-rounds"
+						min="1"
+						max="5"
+						step="1"
+						value="1"
+					/>
+					<div id="display-rounds"></div>
 				</div>
 				<div>
-					<h2 id="player-2" class="turn-inactive">Player 2</h2>
-					<p id="p2-overall-score">0</p>
+					<h2 id="player-2" class="carter-one-regular">Player 2</h2>
+					<p id="p2-overall-score" class="contrail-one-regular">0</p>
 				</div>
-			</div>
-			<div id="best-of-challenge">
-				<label for="set-rounds">Let's set challenge</label>
-				<input
-					type="range"
-					name="set-rounds"
-					id="set-rounds"
-					min="1"
-					max="5"
-					step="1"
-					value="1"
-				/>
-				<div id="display-rounds"></div>
 			</div>
 		</header>
 		<div id="gameDisplay">
-			<div id="buttons">
-				<button class="game-btn" data-row="1" data-cell="1"></button>
-				<button class="game-btn" data-row="1" data-cell="2"></button>
-				<button class="game-btn" data-row="1" data-cell="3"></button>
+			<div id="buttons" class="short-stack-regular">
+				<button
+					class="game-btn short-stack-regular"
+					data-row="1"
+					data-cell="1"
+				></button>
+				<button
+					class="game-btn short-stack-regular"
+					data-row="1"
+					data-cell="2"
+				></button>
+				<button
+					class="game-btn short-stack-regular"
+					data-row="1"
+					data-cell="3"
+				></button>
 
-				<button class="game-btn" data-row="2" data-cell="1"></button>
-				<button class="game-btn" data-row="2" data-cell="2"></button>
-				<button class="game-btn" data-row="2" data-cell="3"></button>
+				<button
+					class="game-btn short-stack-regular"
+					data-row="2"
+					data-cell="1"
+				></button>
+				<button
+					class="game-btn short-stack-regular"
+					data-row="2"
+					data-cell="2"
+				></button>
+				<button
+					class="game-btn short-stack-regular"
+					data-row="2"
+					data-cell="3"
+				></button>
 
-				<button class="game-btn" data-row="3" data-cell="1"></button>
-				<button class="game-btn" data-row="3" data-cell="2"></button>
-				<button class="game-btn" data-row="3" data-cell="3"></button>
+				<button
+					class="game-btn short-stack-regular"
+					data-row="3"
+					data-cell="1"
+				></button>
+				<button
+					class="game-btn short-stack-regular"
+					data-row="3"
+					data-cell="2"
+				></button>
+				<button
+					class="game-btn short-stack-regular"
+					data-row="3"
+					data-cell="3"
+				></button>
 			</div>
 			<div id="scores">
-				<button id="new-game">New Game</button>
+				<button id="new-game" class="contrail-one-regular">
+					New Game
+				</button>
 
-				<h4 id="round-info"></h4>
+				<h4 id="round-info" class="short-stack-regular"></h4>
 
-				<div id="challenge-result">
+				<div id="challenge-result" class="carter-one-regular">
 					<h4 id="chlng-res-heading"></h4>
-					<p id="chlng-res-text"></p>
+					<p id="chlng-res-text" class="short-stack-regular"></p>
 				</div>
 
-				<div id="round-result">
-					<h3 id="round-res-anounc"></h3>
-					<h4 id="round-res-winner"></h4>
-					<p id="round-res-strPlyr"></p>
-					<p id="round-res-strRes"></p>
+				<div id="round-result" class="carter-one-regular">
+					<h4 id="round-res-anounc"></h4>
+					<p id="round-res-winner" class="short-stack-regular"></p>
+					<h4 id="round-res-strPlyr"></h4>
+					<p id="round-res-strRes" class="short-stack-regular"></p>
 				</div>
 
-				<p id="next-player"></p>
+				<p id="next-player" class="contrail-one-regular"></p>
 			</div>
 		</div>
-		<footer><p>MAK</p></footer>
+		<footer class="contrail-one-regular"><p>MAK</p></footer>
 		<!-- <script>
 			gameButtons = document.getElementsByClassName("game-btn");
 			const newGameBtn = document.getElementById("new-game");

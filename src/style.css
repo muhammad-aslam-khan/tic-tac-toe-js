@@ -1,6 +1,15 @@
+:root {
+	--header-bg: #244855;
+	--header-font-clr: #fbe9d0;
+	--page-bg: #90aead;
+	--btn-bg-clr: #e64833;
+	--btn-font-clr: var(--header-font-clr);
+	--headings-font-clr: var(--header-bg);
+	--message-font-clr: #874f41;
+}
 body {
 	margin: 0;
-	background-color: rgba(250, 235, 215, 0.405);
+	background-color: var(--page-bg);
 
 	height: 100vh;
 	width: 100%;
@@ -10,9 +19,11 @@ body {
 	justify-content: space-between;
 }
 header {
-	background-color: aquamarine;
+	background-color: var(--header-bg);
+	color: var(--header-font-clr);
 	/* margin-top: 0; */
 }
+
 #page-heading {
 	margin: 10px;
 	text-align: center;
@@ -20,6 +31,7 @@ header {
 #players-info {
 	display: flex;
 	justify-content: space-around;
+	margin: 0 100px;
 }
 #players-info h2,
 #players-info p {
@@ -38,16 +50,26 @@ header {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+
+	gap: 5px;
+}
+
+#best-of-challenge > input {
+	width: 100%;
 }
 
 #gameDisplay {
-	width: 600px;
+	width: 650px;
+	background-color: white;
 
 	display: grid;
-	grid: min-content/ 300px 1fr;
+	grid: min-content/ 300px 300px;
 	gap: 40px;
 
-	margin: 0 auto;
+	margin: 0 auto; /* for center alignment */
+	padding: 25px;
+
+	border-radius: 10px;
 }
 
 #buttons {
@@ -57,14 +79,15 @@ header {
 	grid: 1fr 1fr 1fr / 1fr 1fr 1fr;
 	gap: 15px;
 
-	background-color: white;
+	/* background-color: white; */
 	padding: 20px;
-	box-shadow: 1px 1px 10px 4px rgba(165, 42, 42, 0.174) inset;
+	/* box-shadow: 1px 1px 10px 4px rgba(165, 42, 42, 0.174) inset; */
 	border-radius: 15px;
 }
 #buttons button {
 	border-radius: 10px;
-	background-color: beige;
+	color: var(--btn-bg-clr);
+	background-color: var(--btn-font-clr);
 	font-size: 3rem;
 }
 
@@ -75,19 +98,31 @@ header {
 	align-items: center;
 	/* justify-content: space-between; */
 
+	color: var(--message-font-clr);
+
 	padding: 15px;
+}
+h4,
+h3 {
+	color: var(--headings-font-clr);
+}
+#scores button {
+	background-color: var(--btn-bg-clr);
+	color: var(--header-font-clr);
+	font-size: 1.3rem;
+	width: 70%;
+	border-radius: 5px;
 }
 #scores * {
 	width: 100%;
 	text-align: center;
 	margin: 5px auto;
 
-	border: 1px solid black;
+	/* border: 1px solid black; */
 }
 
 footer {
 	text-align: center;
-}
-body > * {
-	border: 1px solid;
+	background-color: var(--header-bg);
+	color: var(--header-font-clr);
 }

@@ -365,6 +365,7 @@ const displayGame = (function () {
 			} = gameController.playTurn(rowNum, cellNum);
 
 			console.table(getStatusMsgsObj());
+
 			newGameBtn.disabled = false; // Enabling the new game button, if disabled
 
 			if (getIsMoveAllowed()) {
@@ -379,8 +380,8 @@ const displayGame = (function () {
 
 			// Setting the text of newGame button depending if challenge is On or not, Keeping it separate from above is better
 			newGameBtn.textContent = streakTracker.getIsChallengeSet()
-				? "Restart round"
-				: "New game";
+				? "Restart Round"
+				: "New Game";
 
 			dispChlResHead.textContent =
 				getStatusMsgsObj().challengeResult.heading;
@@ -440,7 +441,7 @@ const displayGame = (function () {
 			dispSetRounds.textContent = "";
 
 			// Reset new game btn text
-			newGameBtn.textContent = "New game";
+			newGameBtn.textContent = "New Game";
 		} else if (streakTracker.getIsChallengeSet() === true) {
 			newGameBtn.textContent = "Restart Round";
 		}
@@ -449,13 +450,19 @@ const displayGame = (function () {
 
 	// Sliding the range slider do not invoke andy gameBoard method.
 	roundsSetter.addEventListener("input", (e) => {
-		if (e.target.value > 1)
+		if (e.target.value > 1) {
 			dispSetRounds.textContent = `Best of ${e.target.value}`;
+		} else if (e.target.value == 1) {
+			dispSetRounds.textContent = "";
+		}
 	});
 	// Releasing the slider actually invokes methods
 	roundsSetter.addEventListener("change", (e) => {
 		if (e.target.value > 1) {
 			streakTracker.setBestOf(e.target.value);
+			gameBoard.resetBoard();
+			resetGameDisplay();
+		} else if (e.target.value == 1) {
 			gameBoard.resetBoard();
 			resetGameDisplay();
 		}
@@ -466,12 +473,9 @@ const displayGame = (function () {
 		for (const btn of gameButtons) {
 			btn.disabled = true;
 		}
-		console.log(streakTracker.getIsChallengeSet());
 
 		if (streakTracker.getIsChallengeSet() === true) {
-			console.log("From Inside", streakTracker.getIsChallengeSet());
 			newGameBtn.textContent = "Start Next Round";
-			console.log(newGameBtn);
 		}
 	};
 })();

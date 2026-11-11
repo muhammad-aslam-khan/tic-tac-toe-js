@@ -1,0 +1,49 @@
+/* 
+Luckiest Guy for page title,
+Short Stack for messages text
+Edu NSW ACT Foundation for other status messages
+Carter One for winner messages, & Player Names
+Contrail One for next player text, & Player overall scores
+*/
+
+/* Luckiest Guy: CSS class */
+.luckiest-guy-regular {
+	font-family: "Luckiest Guy", cursive;
+	font-weight: 400;
+	font-style: normal;
+}
+
+/* Short Stack: CSS class */
+.short-stack-regular {
+	font-family: "Short Stack", cursive;
+	font-weight: 400;
+	font-style: normal;
+}
+
+/* Edu NSW ACT Foundation: CSS class for a variable style */
+/* .edu-nsw-act-foundation-<uniquifier> {
+  font-family: "Edu NSW ACT Foundation", cursive;
+  font-optical-sizing: auto;
+  font-weight: <weight>;
+  font-style: normal;
+} */
+.edu-nsw-act-foundation-300 {
+	font-family: "Edu NSW ACT Foundation", cursive;
+	font-optical-sizing: auto;
+	font-weight: 300;
+	font-style: normal;
+}
+
+/* Carter One: CSS class */
+.carter-one-regular {
+	font-family: "Carter One", system-ui;
+	font-weight: 400;
+	font-style: normal;
+}
+
+/* Contrail One: CSS class */
+.contrail-one-regular {
+	font-family: "Contrail One", sans-serif;
+	font-weight: 400;
+	font-style: normal;
+}
