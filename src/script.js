@@ -68,6 +68,8 @@ const gameController = (function () {
 	let moveNumber = 0;
 	let lastTurnPlayer = player2.getId();
 
+	const resetMoveNumber = () => (moveNumber = 0);
+
 	const playTurn = function (row, cell) {
 		// Checking who played last turn, game always starts from player1 for first time only.
 		// After each round the first move will be for player who lost the last round. Because
@@ -149,7 +151,7 @@ const gameController = (function () {
 			}
 		} else {
 			moveAllowed = false;
-			statusMessages.notAllowed = `Not allowed, already placed ${currentCellValue} here.`;
+			statusMessages.moveNotAllowed = `Move not allowed, cell is picked already.`;
 		}
 
 		const getIsDraw = () => isDraw;
@@ -194,7 +196,7 @@ const gameController = (function () {
 	};
 
 	const checkWinner = function (player) {
-		[row1, row2, row3] = gameBoard.getBoardArray();
+		const [row1, row2, row3] = gameBoard.getBoardArray();
 		// Initializing 3 member arrays of 8 winning patterns from grid
 		const winningCombinations = [
 			row1[0] !== undefined && row1[0] === row1[1] && row1[0] === row1[2],
@@ -207,7 +209,6 @@ const gameController = (function () {
 			row1[2] !== undefined && row1[2] === row2[1] && row1[2] === row3[0],
 		];
 
-		console.log(row3[0], row3[1], row3[2]);
 		for (const combination of winningCombinations) {
 			// Check if at any combination we have a true value
 			// console.log("HEre", combination);
@@ -222,7 +223,7 @@ const gameController = (function () {
 		return false; // If every member is false return false from this method
 	};
 
-	return { playTurn, player1, player2 };
+	return { playTurn, player1, player2, resetMoveNumber };
 })();
 
 const streakTracker = (function () {
@@ -281,6 +282,9 @@ const streakTracker = (function () {
 
 		const p1Streak = player1.getWinningStreak();
 		const p2Streak = player2.getWinningStreak();
+
+		let heading = "";
+		let result = "";
 
 		if (p1Streak === p2Streak) {
 			heading = "Challenge resulted is a draw";
@@ -349,6 +353,7 @@ const displayGame = (function () {
 	const dispRndResStrP = document.getElementById("round-res-strPlyr");
 	const dispRndResStrR = document.getElementById("round-res-strRes");
 	const dispNextPlayer = document.getElementById("next-player");
+	const dispMvNtAllwd = document.getElementById("move-not-allowed");
 
 	for (const btn of gameButtons) {
 		btn.addEventListener("click", (e) => {
@@ -370,6 +375,10 @@ const displayGame = (function () {
 
 			if (getIsMoveAllowed()) {
 				e.target.textContent = currentTurnPlayer.getMarker();
+				dispMvNtAllwd.textContent = "";
+			} else {
+				console.log("here coming", getStatusMsgsObj().moveNotAllowed);
+				dispMvNtAllwd.textContent = getStatusMsgsObj().moveNotAllowed;
 			}
 
 			// Only displaying rounds info of we have a challenge going-on
@@ -424,6 +433,9 @@ const displayGame = (function () {
 
 		// reset the gameBoard Array
 		gameBoard.resetBoard();
+
+		// Reset Move-NUmber to 0
+		gameController.resetMoveNumber();
 
 		// reset the messages
 		dispRndInfo.textContent = "";
